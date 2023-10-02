@@ -10,7 +10,7 @@ on:
 
 jobs:
   deploy-dev: # Deploy to the development environment
-    if: [{{ github.ref == 'refs/heads/main' && inputs.environment == 'dev'}}]
+    if: github.ref == 'refs/heads/main' && inputs.environment == 'dev'
     runs-on: ip-172-31-7-45 # Replace with the label for your dev runner
 
     steps:
@@ -33,7 +33,7 @@ jobs:
         run: pm2 restart backend-test
 
   deploy-prod: # Deploy to the production environment
-    if: [{{ github.ref == 'refs/heads/main' && inputs.environment == 'stg'}}]
+    if: github.ref == 'refs/heads/main' && inputs.environment == 'stg'
     runs-on: ip-172-31-2-210 # Replace with the label for your prod runner
 
     steps:
@@ -52,5 +52,5 @@ jobs:
       - name: Build App
         run: npm run build --if-present
 
-      - name: Restart PM2 (backend-test)
+      # - name: Restart PM2 (backend-test)
       # run: pm2 restart backend-test
