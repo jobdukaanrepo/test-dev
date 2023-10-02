@@ -52,4 +52,4 @@ jobs:
       run: npm run build --if-present
 
     - name: Restart PM2 (backend-test)
-      run: pm2 restart backend-test
+      # run: pm2 restart backend-test
