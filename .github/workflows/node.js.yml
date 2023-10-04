@@ -1,7 +1,7 @@
-name: Node.js CI
+name: Node.js CI/CD
 
 on:
-  workflow_dispatch: # Manual trigger
+  workflow_dispatch:
     inputs:
       environment:
         description: "Environment to deploy to"
@@ -9,10 +9,12 @@ on:
         default: 'dev'
 
 jobs:
-  deploy-dev: # Deploy to the development environment
+  deploy-dev:
+    name: Deploy to Dev Environment
     if: github.ref == 'refs/heads/main' && inputs.environment == 'dev'
-    runs-on: ip-172-31-7-45 # Replace with the label for your dev runner
-
+    runs-on: ${{ github.event.inputs.environment }}-runner
+    env:
+      RUNNER_LABEL: ip-172-31-7-45  # Define the runner label for dev environment
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -32,15 +34,17 @@ jobs:
       - name: Restart PM2 (backend-test)
         run: pm2 restart backend-test
 
-  deploy-prod: # Deploy to the production environment
-    if: github.ref == 'refs/heads/main' && inputs.environment == 'stg'
-    runs-on: ip-172-31-2-210 # Replace with the label for your prod runner
-
+  deploy-prod:
+    name: Deploy to Prod Environment
+    if: github.ref == 'refs/heads/main' && inputs.environment == 'prod'
+    runs-on: ${{ github.event.inputs.environment }}-runner
+    env:
+      RUNNER_LABEL: ip-172-31-2-210  # Define the runner label for prod environment
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Use Node.js 18.x
+       - name: Use Node.js 18.x
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
